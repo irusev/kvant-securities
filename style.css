@@ -2618,17 +2618,7 @@ textarea.form-control {
     font-size: var(--font-size-sm);
 }
 
-/* Stat Diamond Emoji */
-.stat__diamond {
-    font-size: 4rem;
-    margin-bottom: var(--space-4);
-    display: block;
-    transition: transform var(--transition-normal);
-}
-
-.stat:hover .stat__diamond {
-    transform: scale(1.1);
-}
+/* Stat Diamond Emoji - already defined above, this is just for reference */
 
 
 
