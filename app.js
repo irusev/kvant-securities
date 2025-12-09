@@ -221,20 +221,63 @@ function submitForm(form) {
     submitButton.disabled = true;
     submitButton.classList.add('loading');
     
-    // Simulate API call
-    setTimeout(() => {
-        showNotification('Благодарим за заявката! Ще се свържем с вас в рамките на 24 часа.', 'success');
-        form.reset();
+    // Get form data
+    const formData = new FormData(form);
+    const templateParams = {
+        from_name: formData.get('name'),
+        from_phone: formData.get('phone'),
+        from_email: formData.get('email') || 'Не е посочен',
+        service: formData.get('service') || 'Не е избрана услуга',
+        message: formData.get('message') || 'Няма съобщение',
+        to_email: 'dt3rziyski@gmail.com' // Your email address
+    };
+    
+    // Check if EmailJS is configured
+    if (!window.EMAILJS_SERVICE_ID || window.EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID' ||
+        !window.EMAILJS_TEMPLATE_ID || window.EMAILJS_TEMPLATE_ID === 'YOUR_TEMPLATE_ID') {
+        // Fallback: Show success message (form won't actually send email)
+        console.warn('EmailJS not configured. Please set up EmailJS to send emails.');
+        showNotification('EmailJS не е конфигуриран. Моля, настройте EmailJS за изпращане на имейли.', 'error');
         submitButton.textContent = originalText;
         submitButton.disabled = false;
         submitButton.classList.remove('loading');
-        
-        // Add success animation to form
-        form.style.transform = 'scale(1.02)';
-        setTimeout(() => {
-            form.style.transform = 'scale(1)';
-        }, 200);
-    }, 2000);
+        return;
+    }
+    
+    // Send email using EmailJS
+    if (typeof emailjs !== 'undefined') {
+        emailjs.send(
+            window.EMAILJS_SERVICE_ID,
+            window.EMAILJS_TEMPLATE_ID,
+            templateParams
+        )
+        .then(function(response) {
+            console.log('Email sent successfully!', response.status, response.text);
+            showNotification('Благодарим за заявката! Ще се свържем с вас в рамките на 24 часа.', 'success');
+            form.reset();
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+            submitButton.classList.remove('loading');
+            
+            // Add success animation to form
+            form.style.transform = 'scale(1.02)';
+            setTimeout(() => {
+                form.style.transform = 'scale(1)';
+            }, 200);
+        }, function(error) {
+            console.error('Email sending failed:', error);
+            showNotification('Възникна грешка при изпращането на заявката. Моля, опитайте отново или се обадете на +359 878 439 577.', 'error');
+            submitButton.textContent = originalText;
+            submitButton.disabled = false;
+            submitButton.classList.remove('loading');
+        });
+    } else {
+        // EmailJS library not loaded
+        showNotification('EmailJS библиотеката не е заредена. Моля, проверете интернет връзката.', 'error');
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+        submitButton.classList.remove('loading');
+    }
 }
 
 // Enhanced notification system
@@ -1200,8 +1243,44 @@ function enableGoogleAnalytics() {
     console.log('Google Analytics enabled with consent');
 }
 
+// Image Modal Functions
+function openImageModal(imageSrc) {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    
+    if (modal && modalImage) {
+        modalImage.src = imageSrc;
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function closeImageModal(event) {
+    if (event) {
+        event.stopPropagation();
+    }
+    
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const imageModal = document.getElementById('imageModal');
+        if (imageModal && imageModal.classList.contains('active')) {
+            closeImageModal();
+        }
+    }
+});
+
 // Export functions for global use
 window.scrollToSection = scrollToSection;
 window.openBlogModal = openBlogModal;
 window.closeBlogModal = closeBlogModal;
+window.openImageModal = openImageModal;
+window.closeImageModal = closeImageModal;
 
