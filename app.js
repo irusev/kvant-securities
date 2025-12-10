@@ -20,8 +20,14 @@ document.addEventListener('DOMContentLoaded', function() {
     initBlogModal();
     initStickyContact();
     initCookieConsent();
+    initEmailJS();
 });
 
+function initEmailJS() {
+    emailjs.init("xH47zAtDwI1ufht24"); // Replace with your EmailJS Public Key
+    window.EMAILJS_SERVICE_ID = "service_sx02sld"; // Replace with your EmailJS Service ID
+    window.EMAILJS_TEMPLATE_ID = "template_9mzfwm8"; // Replace with your EmailJS Template ID
+}
 // Mobile Navigation
 function initMobileNavigation() {
     const navToggle = document.getElementById('nav-toggle');
@@ -152,9 +158,6 @@ function initContactForm() {
             
             if (!phone) {
                 showFieldError('phone', 'Моля, въведете телефонен номер.');
-                hasErrors = true;
-            } else if (!isValidBulgarianPhone(phone)) {
-                showFieldError('phone', 'Моля, въведете валиден български телефонен номер.');
                 hasErrors = true;
             }
             
