@@ -79,6 +79,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P386SRVC2X"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-P386SRVC2X');
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -103,8 +113,9 @@
                 </nav>
 
                 <div class="header__cta">
-                    <a href="tel:+359878439577" class="header__phone">+359 878 439 577</a>
-                    <button class="btn btn--primary" onclick="scrollToSection('contact')">Заявка сега</button>
+                    <a href="tel:+359878439577" class="header__phone" onclick="gtag('event','phone_click',{event_category:'contact'})">+359 878 439 577</a>
+                    <button class="btn btn--primary" onclick="gtag('event','cta_click',{event_category:'lead'}); scrollToSection('contact')">Заявка сега</button>
+                    <button class="theme-toggle" id="theme-toggle" title="Превключи тема" onclick="toggleTheme()">🌙</button>
                 </div>
 
                 <button class="header__toggle" id="nav-toggle">
@@ -160,6 +171,9 @@
                             <li>15 инженери, сертифицирани за монтаж и поддръжка</li>
                             <li>Членове на Българска Асоциация по Сигурност</li>
                         </ul>
+                        <div style="margin-top: 20px; text-align: center;">
+                            <img src="images/VIGI Certificate.jpg" alt="VIGI Certificate" style="max-width: 300px; height: auto; cursor: pointer;" onclick="openImageModal('images/VIGI Certificate.jpg', 'VIGI Certificate')">
+                        </div>
                     </div>
                 </div>
 
@@ -533,7 +547,7 @@
                             <li>Монтаж</li>
                             <li>Обучение</li>
                         </ul>
-                        <button class="btn btn--primary" onclick="scrollToSection('contact')">Поръчай сега</button>
+                        <button class="btn btn--primary" onclick="gtag('event','cta_click',{event_category:'lead'}); scrollToSection('contact')">Поръчай сега</button>
                     </div>
                     
                     <div class="pricing-card featured">
@@ -546,7 +560,7 @@
                             <li>Мобилен достъп</li>
                             <li>Монтаж и обучение</li>
                         </ul>
-                        <button class="btn btn--primary" onclick="scrollToSection('contact')">Поръчай сега</button>
+                        <button class="btn btn--primary" onclick="gtag('event','cta_click',{event_category:'lead'}); scrollToSection('contact')">Поръчай сега</button>
                     </div>
                     
                     <div class="pricing-card">
@@ -559,7 +573,7 @@
                             <li>Поддръжка 12 месеца</li>
                             <li>Приоритетен сервиз</li>
                         </ul>
-                        <button class="btn btn--primary" onclick="scrollToSection('contact')">Поръчай сега</button>
+                        <button class="btn btn--primary" onclick="gtag('event','cta_click',{event_category:'lead'}); scrollToSection('contact')">Поръчай сега</button>
                     </div>
                     
                     <div class="pricing-card">
@@ -572,7 +586,7 @@
                             <li>Интеграции</li>
                             <li>Персонализирана поддръжка</li>
                         </ul>
-                        <button class="btn btn--primary" onclick="scrollToSection('contact')">Свържи се</button>
+                        <button class="btn btn--primary" onclick="gtag('event','cta_click',{event_category:'lead'}); scrollToSection('contact')">Свържи се</button>
                     </div>
                     
                     <div class="pricing-card">
@@ -585,7 +599,7 @@
                             <li>Диагностика</li>
                             <li>24/7 поддръжка</li>
                         </ul>
-                        <button class="btn btn--primary" onclick="scrollToSection('contact')">Поръчай сега</button>
+                        <button class="btn btn--primary" onclick="gtag('event','cta_click',{event_category:'lead'}); scrollToSection('contact')">Поръчай сега</button>
                     </div>
                 </div>
                 
@@ -803,7 +817,7 @@
                     <div class="contact-info">
                         <div class="contact-item">
                             <h3>📞 Телефон</h3>
-                            <p><a href="tel:+359878439577">+359 878 439 577</a></p>
+                            <p><a href="tel:+359878439577" onclick="gtag('event','phone_click',{event_category:'contact'})">+359 878 439 577</a></p>
                         </div>
                         
                         <div class="contact-item">
@@ -1021,7 +1035,7 @@
                 
                 <div class="footer__section">
                     <h4>Контакти</h4>
-                    <p>Телефон: <a href="tel:+359878439577">+359 878 439 577</a></p>
+                    <p>Телефон: <a href="tel:+359878439577" onclick="gtag('event','phone_click',{event_category:'contact'})">+359 878 439 577</a></p>
                     <p>Имейл: <a href="mailto:dt3rziyski@gmail.com">dt3rziyski@gmail.com</a></p>
                 </div>
                 
@@ -1047,7 +1061,7 @@
 
     <!-- Sticky Contact Button -->
     <div class="sticky-contact" id="stickyContact">
-        <a href="tel:+359878439577" class="sticky-phone">
+        <a href="tel:+359878439577" class="sticky-phone" onclick="gtag('event','phone_click',{event_category:'contact'})">
             <span class="sticky-phone__icon">📞</span>
         </a>
     </div>
@@ -1069,7 +1083,7 @@
     <!-- Google Analytics (foundation) -->
     <script>
         // Replace with your GA4 Measurement ID, e.g., 'G-XXXXXXX'
-        window.GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+        window.GA_MEASUREMENT_ID = 'G-P386SRVC2X';
     </script>
     <script src="app.js"></script>
     <script>

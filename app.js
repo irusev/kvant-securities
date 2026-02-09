@@ -1,7 +1,96 @@
 // Security Website JavaScript - Enhanced functionality with animations
 
+// Define dark mode CSS variables
+const darkModeVariables = {
+    '--color-gray-400-rgb': '119, 124, 124',
+    '--color-teal-300-rgb': '50, 184, 198',
+    '--color-gray-300-rgb': '167, 169, 169',
+    '--color-gray-200-rgb': '245, 245, 245',
+    '--color-background': '#1f2121',
+    '--color-surface': '#262828',
+    '--color-text': '#f5f5f5',
+    '--color-text-secondary': 'rgba(167, 169, 169, 0.7)',
+    '--color-primary': 'rgb(50, 184, 198)',
+    '--color-primary-hover': 'rgb(45, 166, 178)',
+    '--color-primary-active': 'rgb(41, 150, 161)',
+    '--color-secondary': 'rgba(119, 124, 124, 0.15)',
+    '--color-secondary-hover': 'rgba(119, 124, 124, 0.25)',
+    '--color-secondary-active': 'rgba(119, 124, 124, 0.3)',
+    '--color-border': 'rgba(119, 124, 124, 0.3)',
+    '--color-error': '#ff5459',
+    '--color-success': 'rgb(50, 184, 198)',
+    '--color-warning': '#e68161',
+    '--color-info': '#a7a9a9',
+    '--color-focus-ring': 'rgba(50, 184, 198, 0.4)',
+    '--color-btn-primary-text': '#134252',
+    '--color-card-border': 'rgba(119, 124, 124, 0.15)',
+};
+
+const lightModeVariables = {
+    '--color-brown-600-rgb': '94, 82, 64',
+    '--color-teal-500-rgb': '33, 128, 141',
+    '--color-slate-900-rgb': '19, 52, 59',
+    '--color-background': '#fcfcf9',
+    '--color-surface': '#fffff5',
+    '--color-text': '#134253',
+    '--color-text-secondary': '#626c71',
+    '--color-primary': 'rgb(33, 128, 141)',
+    '--color-primary-hover': 'rgb(29, 116, 128)',
+    '--color-primary-active': 'rgb(26, 104, 115)',
+    '--color-secondary': 'rgba(94, 82, 64, 0.12)',
+    '--color-secondary-hover': 'rgba(94, 82, 64, 0.2)',
+    '--color-secondary-active': 'rgba(94, 82, 64, 0.25)',
+    '--color-border': 'rgba(94, 82, 64, 0.2)',
+    '--color-error': '#c0152f',
+    '--color-success': 'rgb(33, 128, 141)',
+    '--color-warning': '#a84b2f',
+    '--color-info': '#626c71',
+    '--color-focus-ring': 'rgba(33, 128, 141, 0.4)',
+    '--color-btn-primary-text': '#fcfcf9',
+    '--color-card-border': 'rgba(94, 82, 64, 0.12)',
+};
+
+// Global theme functions (must be defined before DOMContentLoaded for inline onclick)
+function toggleTheme() {
+    console.log('toggleTheme called!');
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('theme-toggle');
+    const currentTheme = html.getAttribute('data-color-scheme') || 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    console.log('Switching from', currentTheme, 'to', newTheme);
+    
+    // Apply theme CSS variables with !important
+    const vars = newTheme === 'dark' ? darkModeVariables : lightModeVariables;
+    Object.entries(vars).forEach(([key, value]) => {
+        html.style.setProperty(key, value, 'important');
+    });
+    
+    // Force body background/text update
+    document.body.style.setProperty('background-color', newTheme === 'dark' ? '#1f2121' : '#fcfcf9', 'important');
+    document.body.style.setProperty('color', newTheme === 'dark' ? '#f5f5f5' : '#134253', 'important');
+    
+    // Update data attribute and classes
+    html.setAttribute('data-color-scheme', newTheme);
+    html.classList.remove('theme-light', 'theme-dark');
+    html.classList.add('theme-' + newTheme);
+    html.style.colorScheme = newTheme;
+    
+    // Update button
+    if (themeToggle) {
+        themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.title = newTheme === 'dark' ? 'Светла тема' : 'Тъмна тема';
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('theme', newTheme);
+    
+    console.log('✓ Theme changed to:', newTheme);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all functionality
+    initThemeToggle();
     initMobileNavigation();
     initFAQ();
     initContactForm();
@@ -18,6 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initBackgroundVisibility();
     initPageTransitions();
     initBlogModal();
+    initImageModal();
     initStickyContact();
     initCookieConsent();
     initEmailJS();
@@ -28,6 +118,50 @@ function initEmailJS() {
     window.EMAILJS_SERVICE_ID = "service_sx02sld"; // Replace with your EmailJS Service ID
     window.EMAILJS_TEMPLATE_ID = "template_9mzfwm8"; // Replace with your EmailJS Template ID
 }
+
+// Theme Toggle initialization
+function initThemeToggle() {
+    const html = document.documentElement;
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    console.log('=== initThemeToggle ===');
+    
+    // Check system preference
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Load saved theme or use system preference
+    const savedTheme = localStorage.getItem('theme');
+    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    
+    console.log('Saved theme:', savedTheme);
+    console.log('System prefers dark:', prefersDark);
+    console.log('Initial theme:', initialTheme);
+    
+    // Apply theme CSS variables with !important
+    const vars = initialTheme === 'dark' ? darkModeVariables : lightModeVariables;
+    Object.entries(vars).forEach(([key, value]) => {
+        html.style.setProperty(key, value, 'important');
+    });
+    
+    // Force body background/text update
+    document.body.style.setProperty('background-color', initialTheme === 'dark' ? '#1f2121' : '#fcfcf9', 'important');
+    document.body.style.setProperty('color', initialTheme === 'dark' ? '#f5f5f5' : '#134253', 'important');
+    
+    // Set attributes and classes
+    html.setAttribute('data-color-scheme', initialTheme);
+    html.classList.remove('theme-light', 'theme-dark');
+    html.classList.add('theme-' + initialTheme);
+    html.style.colorScheme = initialTheme;
+    
+    // Update button
+    if (themeToggle) {
+        themeToggle.textContent = initialTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.title = initialTheme === 'dark' ? 'Светла тема' : 'Тъмна тема';
+    }
+    
+    console.log('✓ Theme initialized:', initialTheme);
+}
+
 // Mobile Navigation
 function initMobileNavigation() {
     const navToggle = document.getElementById('nav-toggle');
@@ -397,6 +531,53 @@ function ensureNotificationStyles() {
         `;
         document.head.appendChild(style);
     }
+}
+
+// Image modal (open/close) - used by gallery items in index.html
+function initImageModal() {
+    // expose global functions so inline onclick in HTML works
+    window.openImageModal = function(src, alt) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        if (!modal || !modalImg) return;
+
+        modalImg.src = src;
+        if (alt) modalImg.alt = alt;
+
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        // focus close button for accessibility
+        const closeBtn = modal.querySelector('.gallery-modal__close');
+        if (closeBtn) closeBtn.focus();
+    };
+
+    window.closeImageModal = function(e) {
+        // allow passing event or nothing
+        try { if (e && e.preventDefault) e.preventDefault(); } catch (err) {}
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        if (!modal) return;
+
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+
+        // clear src after animation to free memory
+        setTimeout(() => {
+            if (modalImg) modalImg.src = '';
+        }, 300);
+    };
+
+    // Close on ESC key
+    document.addEventListener('keydown', function(ev) {
+        if (ev.key === 'Escape') {
+            const modal = document.getElementById('imageModal');
+            if (modal && modal.classList.contains('active')) {
+                window.closeImageModal(ev);
+            }
+        }
+    });
 }
 
 // Statistics Counter Animation
