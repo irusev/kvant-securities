@@ -1,0 +1,15 @@
+Commit: Update address and sync stats
+
+- Replaced address "ул. Цар Борис III 15" → "Христо Ботев 33" in `index.html` (JSON-LD, contact section, footer).
+- Removed 'ЕКИПА В СТРАНАТА' and 'КОРПОРАТИВНИ КЛИЕНТИ' stat blocks from `index.html`.
+- Updated installed cameras stat: `data-count` 4000 → 1000 in `index.html` and the matching line in `source.md`.
+- Updated copy in `source.md` (removed lines about 24 teams and 50+ corporate clients; changed "екипи" → "екип").
+
+Notes:
+- No other files (README, JSON-LD elsewhere) contained the old address or 4000/4000+ values.
+- If you want to create a Git commit locally, run:
+
+  git add index.html source.md
+  git commit -m "Update address to 'Христо Ботев 33', sync stats (4000→1000), remove teams/corporate stats"
+
+If you prefer I also create a branch name and full commit (if repo available), tell me and I can prepare the exact commands.
