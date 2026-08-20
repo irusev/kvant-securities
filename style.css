@@ -907,6 +907,7 @@ body {
   font-weight: 600;
   text-decoration: none;
   font-size: var(--font-size-base);
+  white-space: nowrap;
 }
 
 .header__phone:hover {

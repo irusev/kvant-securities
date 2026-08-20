@@ -30,6 +30,7 @@ function initEmailJS() {
     window.EMAILJS_SERVICE_ID = "service_sx02sld"; // Replace with your EmailJS Service ID
     window.EMAILJS_TEMPLATE_ID = "template_9mzfwm8"; // Replace with your EmailJS Template ID
 }
+
 // Mobile Navigation
 function initMobileNavigation() {
     const navToggle = document.getElementById('nav-toggle');
@@ -1259,13 +1260,13 @@ function trackEvent(eventName, params) {
 function initAnalyticsEvents() {
     document.querySelectorAll('a[href^="tel:"]').forEach((link) => {
         link.addEventListener('click', () => {
-            trackEvent('click_phone', { event_category: 'contact' });
+            trackEvent('phone_click', { event_category: 'contact' });
         });
     });
 
     document.querySelectorAll('[onclick*="scrollToSection(\'contact\')"]').forEach((el) => {
         el.addEventListener('click', () => {
-            trackEvent('cta_click', { event_category: 'engagement', event_label: 'request_now' });
+            trackEvent('cta_click', { event_category: 'lead' });
         });
     });
 }
@@ -1310,12 +1311,13 @@ function disableGoogleAnalytics() {
 }
 
 // Image Modal Functions
-function openImageModal(imageSrc) {
+function openImageModal(imageSrc, alt) {
     const modal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
     
     if (modal && modalImage) {
         modalImage.src = imageSrc;
+        if (alt) modalImage.alt = alt;
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
     }
