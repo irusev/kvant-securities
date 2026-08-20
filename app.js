@@ -19,7 +19,9 @@ document.addEventListener('DOMContentLoaded', function() {
     initPageTransitions();
     initBlogModal();
     initStickyContact();
+    initMobileCta();
     initCookieConsent();
+    initAnalyticsEvents();
     initEmailJS();
 });
 
@@ -257,6 +259,7 @@ function submitForm(form) {
         .then(function(response) {
             console.log('Email sent successfully!', response.status, response.text);
             showNotification('Благодарим за заявката! Ще се свържем с вас в рамките на 24 часа.', 'success');
+            trackEvent('generate_lead', { method: 'contact_form' });
             form.reset();
             submitButton.textContent = originalText;
             submitButton.disabled = false;
@@ -1049,6 +1052,26 @@ function initStickyContact() {
     stickyContact.classList.add('visible');
 }
 
+// Keep "Заявка сега" visible on mobile, hide it while the contact form is on screen
+function initMobileCta() {
+    const bar = document.getElementById('mobileCta');
+    const contact = document.getElementById('contact');
+
+    if (!bar || !contact) {
+        return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            bar.classList.toggle('is-hidden', entry.isIntersecting);
+        });
+    }, {
+        threshold: 0.2
+    });
+
+    observer.observe(contact);
+}
+
 
 
 // ==========================================================================
@@ -1064,7 +1087,8 @@ let cookieConsent = {
 
 // Initialize cookie consent system
 function initCookieConsent() {
-    // Check if user has already given consent
+    addCookieEventListeners();
+
     const savedConsent = getCookieConsent();
     if (savedConsent) {
         cookieConsent = savedConsent;
@@ -1073,12 +1097,8 @@ function initCookieConsent() {
         }
         return;
     }
-    
-    // Show cookie consent popup
+
     showCookieConsent();
-    
-    // Add event listeners
-    addCookieEventListeners();
 }
 
 // Show cookie consent popup
@@ -1153,6 +1173,11 @@ function addCookieEventListeners() {
     if (saveSettingsBtn) {
         saveSettingsBtn.addEventListener('click', saveCookieSettings);
     }
+
+    const openSettingsBtn = document.getElementById('openCookieSettings');
+    if (openSettingsBtn) {
+        openSettingsBtn.addEventListener('click', showCookieSettings);
+    }
 }
 
 // Show cookie settings modal
@@ -1175,6 +1200,9 @@ function hideCookieSettings() {
     if (modal) {
         modal.classList.remove('show');
     }
+    if (!getCookieConsent()) {
+        showCookieConsent();
+    }
 }
 
 // Save cookie settings
@@ -1189,9 +1217,11 @@ function saveCookieSettings() {
     
     saveCookieConsent();
     hideCookieSettings();
-    
+
     if (cookieConsent.analytics) {
         enableGoogleAnalytics();
+    } else {
+        disableGoogleAnalytics();
     }
 }
 
@@ -1215,35 +1245,68 @@ function getCookieConsent() {
     }
 }
 
-// Enable Google Analytics (only if consent given)
+function isGaConfigured() {
+    return Boolean(window.GA_MEASUREMENT_ID) && window.GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX';
+}
+
+function trackEvent(eventName, params) {
+    if (typeof gtag !== 'function' || !cookieConsent.analytics || !isGaConfigured()) {
+        return;
+    }
+    gtag('event', eventName, params || {});
+}
+
+function initAnalyticsEvents() {
+    document.querySelectorAll('a[href^="tel:"]').forEach((link) => {
+        link.addEventListener('click', () => {
+            trackEvent('click_phone', { event_category: 'contact' });
+        });
+    });
+
+    document.querySelectorAll('[onclick*="scrollToSection(\'contact\')"]').forEach((el) => {
+        el.addEventListener('click', () => {
+            trackEvent('cta_click', { event_category: 'engagement', event_label: 'request_now' });
+        });
+    });
+}
+
+let gaScriptLoaded = false;
+
 function enableGoogleAnalytics() {
     if (!cookieConsent.analytics) {
-        console.log('Google Analytics disabled - no consent given');
         return;
     }
-    
-    if (!window.GA_MEASUREMENT_ID || window.GA_MEASUREMENT_ID === 'G-XXXXXXXXXX') {
-        console.log('Google Analytics not configured - no GA_MEASUREMENT_ID');
+
+    if (!isGaConfigured()) {
+        console.log('Google Analytics not configured — set window.GA_MEASUREMENT_ID in index.html');
         return;
     }
-    
-    // Load Google Analytics script
+
+    if (typeof gtag === 'function') {
+        gtag('consent', 'update', { analytics_storage: 'granted' });
+    }
+
+    if (gaScriptLoaded) {
+        return;
+    }
+    gaScriptLoaded = true;
+
     const script = document.createElement('script');
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${window.GA_MEASUREMENT_ID}`;
     document.head.appendChild(script);
-    
-    // Initialize gtag
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    window.gtag = gtag;
+
     gtag('js', new Date());
     gtag('config', window.GA_MEASUREMENT_ID, {
         anonymize_ip: true,
-        cookie_flags: 'SameSite=Strict;Secure'
+        cookie_flags: 'SameSite=Lax;Secure'
     });
-    
-    console.log('Google Analytics enabled with consent');
+}
+
+function disableGoogleAnalytics() {
+    if (typeof gtag === 'function') {
+        gtag('consent', 'update', { analytics_storage: 'denied' });
+    }
 }
 
 // Image Modal Functions

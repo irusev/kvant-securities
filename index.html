@@ -96,7 +96,6 @@
                     <li><a href="#services">Услуги</a></li>
                     <li><a href="#gallery">Портфолио</a></li>
                     <li><a href="#pricing">Пакети</a></li>
-                    <li><a href="#testimonials">Отзиви</a></li>
                     <li><a href="#faq">Въпроси</a></li>
                     <li><a href="#contact">Контакти</a></li>
                 </ul>
@@ -638,83 +637,6 @@
             </div>
         </section>
 
-        <!-- Testimonials Section -->
-        <section class="testimonials" id="testimonials">
-            <div class="testimonials__background"></div>
-            <div class="testimonials__overlay"></div>
-            <div class="container">
-                <div class="section-header">
-                    <h2>Какво казват нашите клиенти</h2>
-                    <p>Доверието на клиентите е най-важното за нас</p>
-                </div>
-                <div class="testimonials-grid">
-                    <div class="testimonial-card">
-                        <div class="testimonial__content">
-                            <div class="testimonial__quote">
-                                <p>"Изключително доволни сме от професионализма на екипа — камерите работят безотказно, а денонощната реакция при инциденти ни гарантира спокойствие!"</p>
-                            </div>
-                            <div class="testimonial__author">
-                                <div class="testimonial__avatar">ПА</div>
-                                <div class="testimonial__info">
-                                    <h4>Петър Ангелов</h4>
-                                    <span>"Бизнес Парк София"</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial__rating">
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial__content">
-                            <div class="testimonial__quote">
-                                <p>"Благодарим за индивидуалния подход, професионалния монтаж и отличната поддръжка. Ползваме услугите вече повече от 5 години."</p>
-                            </div>
-                            <div class="testimonial__author">
-                                <div class="testimonial__avatar">МГ</div>
-                                <div class="testimonial__info">
-                                    <h4>Милена Георгиева</h4>
-                                    <span>Частен клиент</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial__rating">
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                        </div>
-                    </div>
-                    <div class="testimonial-card">
-                        <div class="testimonial__content">
-                            <div class="testimonial__quote">
-                                <p>"Бързина, качество и доверие — това получихме. След внедряването на новата IP система, проследяваме обекта си от телефона дори в чужбина!"</p>
-                            </div>
-                            <div class="testimonial__author">
-                                <div class="testimonial__avatar">ВИ</div>
-                                <div class="testimonial__info">
-                                    <h4>Васил Иванов</h4>
-                                    <span>Собственик на Складова база</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial__rating">
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- FAQ Section -->
         <section class="faq" id="faq">
             <div class="faq__background"></div>
@@ -1041,6 +963,7 @@
             
             <div class="footer__bottom">
                 <p>&copy; 2025 КВАНТ СИГУРНОСТ. Всички права запазени.</p>
+                <p><button type="button" class="footer__cookie-link" id="openCookieSettings">Настройки за бисквитки</button></p>
             </div>
         </div>
     </footer>
@@ -1050,6 +973,11 @@
         <a href="tel:+359878439577" class="sticky-phone">
             <span class="sticky-phone__icon">📞</span>
         </a>
+    </div>
+
+    <!-- Mobile sticky CTA -->
+    <div class="mobile-cta" id="mobileCta">
+        <button type="button" class="btn btn--primary mobile-cta__btn" onclick="scrollToSection('contact')">Заявка сега</button>
     </div>
 
     <!-- EmailJS SDK -->
@@ -1066,10 +994,22 @@
         window.EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID"; // Replace with your EmailJS Template ID
     </script>
     
-    <!-- Google Analytics (foundation) -->
+    <!-- Google Analytics 4: replace the placeholder with your Measurement ID (G-XXXXXXXX) -->
     <script>
-        // Replace with your GA4 Measurement ID, e.g., 'G-XXXXXXX'
         window.GA_MEASUREMENT_ID = 'G-XXXXXXXXXX';
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        window.gtag = gtag;
+
+        // Consent Mode v2 — analytics stay off until the visitor accepts
+        gtag('consent', 'default', {
+            analytics_storage: 'denied',
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied',
+            wait_for_update: 500
+        });
     </script>
     <script src="app.js"></script>
     <script>
